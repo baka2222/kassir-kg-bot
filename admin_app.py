@@ -89,10 +89,10 @@ class AnswerAdmin(ModelView, model=Answer):
         Answer.id: 'ID',
         Answer.question_en: 'Вопрос (EN)',
         Answer.question_ru: 'Вопрос (RU)',
-        Answer.question_ky: 'Вопрос (KY)',
+        Answer.question_ky: 'Вопрос (UZ)',
         Answer.answer_en: 'Ответ (EN)',
         Answer.answer_ru: 'Ответ (RU)',
-        Answer.answer_ky: 'Ответ (KY)',
+        Answer.answer_ky: 'Ответ (UZ)',
         Answer.category: 'Категория',
     }
 
@@ -131,7 +131,7 @@ class AnswerCategoryAdmin(ModelView, model=AnswerCategory):
         AnswerCategory.id: 'ID',
         AnswerCategory.name_en: 'Название (EN)',
         AnswerCategory.name_ru: 'Название (RU)',
-        AnswerCategory.name_ky: 'Название (KY)',
+        AnswerCategory.name_ky: 'Название (UZ)',
         AnswerCategory.answers: 'Ответы',
     }
 

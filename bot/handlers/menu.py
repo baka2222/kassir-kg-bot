@@ -8,7 +8,7 @@ from languages import languages
 menu_router = Router()
 
 
-@menu_router.message(F.text.in_({'Menu', 'Меню'}))
+@menu_router.message(F.text.in_({'Menu', 'Меню', 'Menyu'}))
 async def menu_handler(message: Message):
     current_user = await get_user_by_tg_id(tg_id=message.from_user.id)
 

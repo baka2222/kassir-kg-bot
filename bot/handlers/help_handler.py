@@ -10,6 +10,7 @@ from database.repository import (
 from aiogram_widgets.pagination import KeyboardPaginator
 from languages import languages
 from bot.bot import bot
+import asyncio
 
 
 help_router = Router()
@@ -32,13 +33,6 @@ async def support_handler(callback_query: CallbackQuery):
         await callback_query.message.edit_text(languages[lang]['not_exist_category'])
         await callback_query.answer()
         return
-
-    buttons.append(
-        InlineKeyboardButton(
-            text=languages[lang]['connect_operator'],
-            callback_data='connect_operator'
-        )
-    )
 
     paginator = KeyboardPaginator(
         router=help_router,
@@ -69,13 +63,6 @@ async def support_category_handler(callback_query: CallbackQuery):
         )
         for ans in answers
     ]
-
-    buttons.append(
-        InlineKeyboardButton(
-            text=languages[lang]['connect_operator'],
-            callback_data='connect_operator'
-        )
-    )
 
     paginator = KeyboardPaginator(
         router=help_router,
@@ -113,9 +100,10 @@ async def support_answer_handler(callback_query: CallbackQuery):
     )
     
     await callback_query.message.answer(answer_text)
-    await callback_query.message.answer(languages[lang]['is_this_helpful'], reply_markup=ikb)
     await callback_query.answer()
-
+    await asyncio.sleep(3)
+    await callback_query.message.answer(languages[lang]['is_this_helpful'], reply_markup=ikb)
+ 
 
 @help_router.callback_query(F.data == 'helpful_answer')
 async def helpful_answer_handler(callback_query: CallbackQuery):
