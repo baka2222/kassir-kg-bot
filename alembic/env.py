@@ -3,8 +3,8 @@ from logging.config import fileConfig
 from sqlalchemy.ext.asyncio import async_engine_from_config
 from sqlalchemy import pool
 
-import os
-from dotenv import load_dotenv
+# import os
+# from dotenv import load_dotenv
 from alembic import context
 
 from database.models.base import Base
@@ -14,19 +14,19 @@ from database.models import operator_models
 from database.engine import DB_URL
 import asyncio
 
-load_dotenv()
+# load_dotenv()
 
-DB_USER = os.getenv("DB_USERNAME", "postgres")
-DB_PASS = os.getenv("DB_PASSWORD", "")
-DB_HOST = os.getenv("DB_HOST", "postgres") # Имя сервиса в docker-compose
-DB_PORT = os.getenv("DB_PORT", "5431")    # Порт БЕРЕТСЯ из .env
-DB_NAME = os.getenv("DB_NAME", "KassirDev")
+# DB_USER = os.getenv("DB_USERNAME")
+# DB_PASS = os.getenv("DB_PASSWORD")
+# DB_HOST = os.getenv("DB_HOST") # Имя сервиса в docker-compose
+# DB_PORT = os.getenv("DB_PORT")    # Порт БЕРЕТСЯ из .env
+# DB_NAME = os.getenv("DB_NAME")
 
-# Для alembic миграций можно использовать синхронный драйвер
-DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+# # Для alembic миграций можно использовать синхронный драйвер
+# D_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 config = context.config
-config.set_main_option("sqlalchemy.url", DATABASE_URL)
+config.set_main_option("sqlalchemy.url", DB_URL)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)

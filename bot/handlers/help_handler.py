@@ -30,7 +30,8 @@ async def support_handler(callback_query: CallbackQuery):
     ]
 
     if not buttons:
-        await callback_query.message.edit_text(languages[lang]['not_exist_category'])
+        await callback_query.message.delete()
+        await callback_query.message.answer(languages[lang]['not_exist_category'])
         await callback_query.answer()
         return
 
@@ -41,7 +42,8 @@ async def support_handler(callback_query: CallbackQuery):
         per_row=1   
     )
 
-    await callback_query.message.edit_text(languages[lang]['what_is_your_answer_cat'], reply_markup=paginator.as_markup())
+    await callback_query.message.delete()
+    await callback_query.message.answer(languages[lang]['what_is_your_answer_cat'], reply_markup=paginator.as_markup())
     await callback_query.answer()
 
 
@@ -52,7 +54,8 @@ async def support_category_handler(callback_query: CallbackQuery):
     answers = await list_answer_by_category(category_id=int(category_id))
 
     if not answers:
-        await callback_query.message.edit_text(languages[lang]['not_exist_answer'])
+        await callback_query.message.delete()
+        await callback_query.message.answer(languages[lang]['not_exist_answer'])
         await callback_query.answer()
         return
     
@@ -71,7 +74,8 @@ async def support_category_handler(callback_query: CallbackQuery):
         per_row=1   
     )
 
-    await callback_query.message.edit_text(languages[lang]['what_is_your_question'], reply_markup=paginator.as_markup())
+    await callback_query.message.delete()
+    await callback_query.message.answer(languages[lang]['what_is_your_question'], reply_markup=paginator.as_markup())
     await callback_query.answer()
 
 
@@ -82,7 +86,8 @@ async def support_answer_handler(callback_query: CallbackQuery):
     answer = await get_answer_by_id(answer_id=int(answer_id))
 
     if not answer:
-        await callback_query.message.edit_text(languages[lang]['not_exist_answer'])
+        await callback_query.message.delete()
+        await callback_query.message.answer(languages[lang]['not_exist_answer'])
         await callback_query.answer()
         return
     
@@ -125,7 +130,8 @@ async def connect_operator_handler(callback_query: CallbackQuery):
     
     active_chat = await get_active_chat_by_user(user.id)
     if active_chat:
-        await callback_query.message.edit_text(
+        await callback_query.message.delete()
+        await callback_query.message.answer(
             f"⚠️ <b>{languages[lang]['active_chat_exists']}</b>\n\n"
             f"{languages[lang]['please_finish_current_chat']}",
             parse_mode="HTML"
@@ -144,7 +150,8 @@ async def connect_operator_handler(callback_query: CallbackQuery):
             'system'
         )
         
-        await callback_query.message.edit_text(
+        await callback_query.message.delete()
+        await callback_query.message.answer(
             f"✅ <b>{languages[lang]['operator_found_success']}</b>\n\n"
             f"👤 <b>{best_operator.name}</b>\n"
             f"⭐ {languages[lang]['operator_rating']} {best_operator.rating:.1f}/5.0\n\n"
@@ -152,10 +159,13 @@ async def connect_operator_handler(callback_query: CallbackQuery):
             parse_mode="HTML"
         )
 
+        phone_line = (
+            f"📱 Телефон: <a href='tel:{user.phone}'>{user.phone}</a>\n" if user.phone else "📱 Телефон: —\n"
+        )
         await bot.send_message(
             best_operator.tg_id,
-            f"📞 Новый чат с пользователем {user.name or user.phone}\n"
-            f"📱 Телефон: <a href='tel:{user.phone}'>{user.phone}</a>\n"
+            f"📞 Новый чат с пользователем {user.name or user.phone or 'Пользователь'}\n"
+            f"{phone_line}"
             f"Пожалуйста, начните разговор, отправив сообщение в этот чат.\n"
             f"Для просмотра чатов введите /operator_login",
             parse_mode="HTML"
@@ -163,7 +173,8 @@ async def connect_operator_handler(callback_query: CallbackQuery):
         
         await callback_query.answer()
     else:
-        await callback_query.message.edit_text(
+        await callback_query.message.delete()
+        await callback_query.message.answer(
             f"⏳ <b>{languages[lang]['all_operators_busy']}</b>\n\n"
             f"{languages[lang]['request_in_queue']}\n\n"
             f"{languages[lang]['try_later']}",

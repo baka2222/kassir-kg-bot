@@ -136,7 +136,8 @@ async def operator_status_menu(callback_query: CallbackQuery):
         ]
     )
     
-    await callback_query.message.edit_text(text, reply_markup=ikb, parse_mode="HTML")
+    await callback_query.message.delete()
+    await callback_query.message.answer(text, reply_markup=ikb, parse_mode="HTML")
     await callback_query.answer()
 
 
@@ -181,7 +182,8 @@ async def operator_view_chats(callback_query: CallbackQuery):
                 [InlineKeyboardButton(text="↩️ Назад", callback_data='op_back_to_menu')]
             ]
         )
-        await callback_query.message.edit_text(
+        await callback_query.message.delete()
+        await callback_query.message.answer(
             "📭 <b>У вас нет активных чатов</b>\n\n"
             "Когда пользователи подключатся, они появятся здесь.",
             reply_markup=ikb,
@@ -197,8 +199,8 @@ async def operator_view_chats(callback_query: CallbackQuery):
         user = chat.user
         text += (
             f"<b>{i}. Чат #{chat.id}</b>\n"
-            f"👤 {user.name or user.phone}\n"
-            f"📱 {user.phone}\n"
+            f"👤 {user.name or user.phone or 'Пользователь'}\n"
+            f"📱 {user.phone or '—'}\n"
             f"💬 {chat.messages_count} сообщений\n\n"
         )
         
@@ -213,7 +215,8 @@ async def operator_view_chats(callback_query: CallbackQuery):
     buttons.append(InlineKeyboardButton(text="↩️ Назад", callback_data='op_back_to_menu'))
     
     ikb = InlineKeyboardMarkup(inline_keyboard=[[btn] for btn in buttons])
-    await callback_query.message.edit_text(text, reply_markup=ikb, parse_mode="HTML")
+    await callback_query.message.delete()
+    await callback_query.message.answer(text, reply_markup=ikb, parse_mode="HTML")
     await callback_query.answer()
 
 
@@ -254,7 +257,7 @@ async def operator_open_chat(callback_query: CallbackQuery, state: FSMContext):
         text = (
             f"💬 <b>Чат #{chat.id}</b>\n"
             f"👤 <b>{user.name or 'Неизвестный'}</b>\n"
-            f"📱 {user.phone}\n"
+            f"📱 {user.phone or '—'}\n"
             f"📍 Язык: {user.language.upper()}\n"
             f"⏰ Начат: {chat.started_at.strftime('%H:%M:%S')}\n"
             f"💬 Сообщений: {chat.messages_count}\n\n"
@@ -275,7 +278,8 @@ async def operator_open_chat(callback_query: CallbackQuery, state: FSMContext):
         # Сохраняем ID чата в состояние на случай если понадобится
         await state.update_data(current_chat_id=chat_id)
         
-        await callback_query.message.edit_text(text, reply_markup=ikb, parse_mode="HTML")
+        await callback_query.message.delete()
+        await callback_query.message.answer(text, reply_markup=ikb, parse_mode="HTML")
         await callback_query.answer()
     except Exception as e:
         await callback_query.answer(f"❌ Ошибка: {str(e)}", show_alert=True)
@@ -316,7 +320,7 @@ async def operator_refresh_chat(callback_query: CallbackQuery, state: FSMContext
         text = (
             f"💬 <b>Чат #{chat.id}</b>\n"
             f"👤 <b>{user.name or 'Неизвестный'}</b>\n"
-            f"📱 {user.phone}\n"
+            f"📱 {user.phone or '—'}\n"
             f"📍 Язык: {user.language.upper()}\n"
             f"⏰ Начат: {chat.started_at.strftime('%H:%M:%S')}\n"
             f"💬 Сообщений: {chat.messages_count}\n\n"
@@ -335,7 +339,8 @@ async def operator_refresh_chat(callback_query: CallbackQuery, state: FSMContext
             ]
         )
         
-        await callback_query.message.edit_text(text, reply_markup=ikb, parse_mode="HTML")
+        await callback_query.message.delete()
+        await callback_query.message.answer(text, reply_markup=ikb, parse_mode="HTML")
         await callback_query.answer("✅ Чат обновлён")
     except Exception as e:
         await callback_query.answer(f"Изменений нет")
@@ -351,7 +356,8 @@ async def operator_reply_chat(callback_query: CallbackQuery, state: FSMContext):
         await state.set_state(OperatorStates.replying_to_chat)
         await state.update_data(reply_chat_id=chat_id)
         
-        await callback_query.message.edit_text(
+        await callback_query.message.delete()
+        await callback_query.message.answer(
             f"✍️ <b>Введите ваше сообщение для чата #{chat_id}</b>\n\n"
             f"<i>Просто напишите сообщение текстом.</i>",
             parse_mode="HTML"
@@ -514,7 +520,8 @@ async def operator_close_chat(callback_query: CallbackQuery, state: FSMContext, 
             ]
         )
         
-        await callback_query.message.edit_text(text, reply_markup=ikb, parse_mode="HTML")
+        await callback_query.message.delete()
+        await callback_query.message.answer(text, reply_markup=ikb, parse_mode="HTML")
         await callback_query.answer("✅ Чат успешно закрыт.")
         
         # Очистить состояние
@@ -556,7 +563,8 @@ async def operator_profile(callback_query: CallbackQuery):
         ]
     )
     
-    await callback_query.message.edit_text(text, reply_markup=ikb, parse_mode="HTML")
+    await callback_query.message.delete()
+    await callback_query.message.answer(text, reply_markup=ikb, parse_mode="HTML")
     await callback_query.answer()
 
 
@@ -586,7 +594,8 @@ async def operator_help(callback_query: CallbackQuery):
         ]
     )
     
-    await callback_query.message.edit_text(text, reply_markup=ikb, parse_mode="HTML")
+    await callback_query.message.delete()
+    await callback_query.message.answer(text, reply_markup=ikb, parse_mode="HTML")
     await callback_query.answer()
 
 
@@ -600,7 +609,8 @@ async def operator_back_to_menu(callback_query: CallbackQuery):
         return
     
     text, ikb = await show_operator_menu(callback_query.message.chat.id)
-    await callback_query.message.edit_text(text, reply_markup=ikb, parse_mode="HTML")
+    await callback_query.message.delete()
+    await callback_query.message.answer(text, reply_markup=ikb, parse_mode="HTML")
     await callback_query.answer()
 
 
@@ -629,7 +639,7 @@ async def handle_user_message(message: Message, bot: Bot):
     if operator:
         await bot.send_message(
             chat_id=operator.tg_id,
-            text=f"👤 <b>{user.name or user.phone}:</b>\n{message.text}",
+            text=f"👤 <b>{user.name or user.phone or 'Пользователь'}:</b>\n{message.text}",
             parse_mode="HTML"
         )
 

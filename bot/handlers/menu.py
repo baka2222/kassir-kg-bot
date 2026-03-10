@@ -18,13 +18,33 @@ async def menu_handler(message: Message):
     
     lang = current_user.language
 
+    lang_label = (
+        languages[lang]['lang_russian'] if lang == 'ru'
+        else languages[lang]['lang_english'] if lang == 'en'
+        else languages[lang]['lang_kyrgyz']
+    )
+
     ikb = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text=languages[lang]['support'], callback_data='support')],
-            [InlineKeyboardButton(text=languages[lang]['language_change'], callback_data='language_change')]
+            [
+                InlineKeyboardButton(text=f"🛠️ {languages[lang]['support']}", callback_data='support')
+            ],
+            [
+                
+                InlineKeyboardButton(text=f"🌐 {languages[lang]['language_change']}", callback_data='language_change')
+            ],
+            [
+                
+                InlineKeyboardButton(text=f"📢 {languages[lang]['social']}", callback_data='social')
+            ]
         ]
     )
-    await message.answer(languages[lang]['menu_activate'], reply_markup=ikb)
+
+    await message.answer(
+        f"{languages[lang]['menu_activate_by_button']}",
+        reply_markup=ikb,
+        parse_mode="HTML"
+    )
 
 
 @menu_router.callback_query(F.data == 'language_change')
@@ -37,8 +57,10 @@ async def language_change_handler(callback_query: CallbackQuery):
             [InlineKeyboardButton(text=languages[lang]['lang_kyrgyz'], callback_data='lang_ky')]
         ]
     )
-    
-    await callback_query.message.edit_text(languages[lang]['language_change_activate'], reply_markup=ikb)
+
+    # delete the old menu message to keep the chat clean
+    await callback_query.message.delete()
+    await callback_query.message.answer(languages[lang]['language_change_activate'], reply_markup=ikb)
     await callback_query.answer()
 
 
