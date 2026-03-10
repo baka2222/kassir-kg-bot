@@ -1,6 +1,6 @@
 from .base import Base, Fileds
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, String, ForeignKey 
+from sqlalchemy import ForeignKey, String, ForeignKey, Text
 
 
 class AnswerCategory(Base):
@@ -24,9 +24,9 @@ class Answer(Base):
     question_ru: Mapped[str] = mapped_column(String(255), nullable=False)
     question_en: Mapped[str] = mapped_column(String(255), nullable=False)
     question_ky: Mapped[str] = mapped_column(String(255), nullable=False)
-    answer_ru: Mapped[str] = mapped_column(String(255), nullable=False)
-    answer_en: Mapped[str] = mapped_column(String(255), nullable=False)
-    answer_ky: Mapped[str] = mapped_column(String(255), nullable=False)
+    answer_ru: Mapped[str] = mapped_column(Text, nullable=False)
+    answer_en: Mapped[str] = mapped_column(Text, nullable=False)
+    answer_ky: Mapped[str] = mapped_column(Text, nullable=False)
     category_id: Mapped[int] = mapped_column(ForeignKey('answer_categories.id', ondelete='CASCADE'), nullable=False)
 
     category = relationship('AnswerCategory', back_populates='answers')

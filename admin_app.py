@@ -13,6 +13,7 @@ import os
 from zoneinfo import ZoneInfo
 from datetime import timezone
 from wtforms import SelectField as Select
+from wtforms import TextAreaField
 
 
 load_dotenv()
@@ -84,7 +85,7 @@ class UserAdmin(ModelView, model=User):
 class AnswerAdmin(ModelView, model=Answer):
     name = "Ответы на вопросы"
     name_plural = "Ответы на вопросы"
-    column_list = [Answer.id, Answer.question_en, Answer.question_ru, Answer.answer_en, Answer.answer_ru, Answer.answer_ky, Answer.question_ky, Answer.category]
+    column_list = [Answer.id, Answer.question_ru, Answer.category]
     column_labels = {
         Answer.id: 'ID',
         Answer.question_en: 'Вопрос (EN)',
@@ -104,12 +105,10 @@ class AnswerAdmin(ModelView, model=Answer):
 
     column_formatters_detail = {
         Answer.category: lambda obj, col: f"""
-            <div style='padding: 10px; background: #f0f0f0; border-radius: 5px;'>
-                <strong>ID:</strong> {obj.category.id}<br>
-                <strong>RU:</strong> {obj.category.name_ru}<br>
-                <strong>EN:</strong> {obj.category.name_en}<br>
-                <strong>KY:</strong> {obj.category.name_ky}
-            </div>
+                {obj.category.id}
+                {obj.category.name_ru}
+                {obj.category.name_en}
+                {obj.category.name_ky}
         """ if obj.category else 'Без категории',
     }
 
@@ -121,6 +120,12 @@ class AnswerAdmin(ModelView, model=Answer):
         Answer.answer_ru, 
         Answer.answer_ky
     ]
+
+    form_overrides = {
+        'answer_ru': TextAreaField,
+        'answer_en': TextAreaField,
+        'answer_ky': TextAreaField,
+    }
     
 
 class AnswerCategoryAdmin(ModelView, model=AnswerCategory):
